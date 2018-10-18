@@ -36,15 +36,6 @@ void ozv(int myfile);
 
 void setup()
 {
-	//WiFi.mode( WIFI_OFF );
-	//WiFi.forceSleepBegin();
-
-//	WiFi.disconnect();
-//	WiFi.mode(WIFI_OFF);
-//	WiFi.forceSleepBegin();
-//	delay(1);
-
-
 	pinMode(BusyState,INPUT);
 
 	Wire.begin();
@@ -82,13 +73,11 @@ void loop()
 		u8g2.firstPage();
 		do
 		{
-//			u8g2.setFont(u8g2_font_logisoso32_tf);   // set the target font
 			u8g2.setCursor(0, 32);
 			u8g2.print(result.heartBPM);
 		} while ( u8g2.nextPage() );
 
 		beatCount = (++beatCount) % CIRCULAR_BUFFER_SIZE;
-		//beatCount = beatCount % CIRCULAR_BUFFER_SIZE;
 		counts[beatCount] = round(result.heartBPM);
 
 		Serial.print(beatCount); Serial.print(" - ");

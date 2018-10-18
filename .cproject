@@ -25,10 +25,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/U8g2/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/MAX30100-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/espsoftwareserial}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/SPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1935740562" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -40,10 +40,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/U8g2/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/MAX30100-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/espsoftwareserial}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/SPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.273623423" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -55,10 +55,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/U8g2/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/MAX30100-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/espsoftwareserial}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/SPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PULSE_METER/libraries/QueueArray}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.470582627" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>

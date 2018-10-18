@@ -4,7 +4,7 @@
 #include <math.h>
 #include <Wire.h>
 #include <U8g2lib.h>
-
+#include <QueueArray.h>
 #include "MAX30100.h"
 #include <DigisparkJQ6500.h>
 #include <SoftwareSerial.h>
@@ -57,7 +57,7 @@ void loop()
 	// You have to call update with frequency at least 37Hz.
 	// But the closer you call it to 100Hz the better, the filter will work.
 
-//	int t_Start = millis();
+	int t_Start = millis();
 
 	pulseoxymeter_t result = pulseOxymeter->update();
 
@@ -89,28 +89,23 @@ void loop()
 			{
 				if (millis() - lastTalk > 5000)
 				{
-					mp3.playFileByIndexNumber(round(result.heartBPM) - 41);
+					mp3.playFileByIndexNumber(round(result.heartBPM) - 40);
 					lastTalk = millis();
 				}
 			}
 		}
 	}
 
-//	int t_End = millis();
-//
-//	if (t_End - t_Start > 0)
-//	{
-//		Serial.print(t_Start); Serial.print("-");Serial.print(t_End);Serial.print(" - ");Serial.println(t_End - t_Start);
-//	}
+	int t_End = millis();
 
-//	if (t_End >= t_Start && (t_End - t_Start < 10))
-//	{
-//		delay(10 - (t_End - t_Start));
-//	}
-//	else
-//	{
+	if (t_End >= t_Start && (t_End - t_Start < 10))
+	{
+		delay(10 - (t_End - t_Start));
+	}
+	else
+	{
 		delay(15);
-//	}
+	}
 }
 
 

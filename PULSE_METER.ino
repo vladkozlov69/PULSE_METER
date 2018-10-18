@@ -8,7 +8,6 @@
 #include "MAX30100.h"
 #include <DigisparkJQ6500.h>
 #include <SoftwareSerial.h>
-#include <QueueArray.h>
 #include "ESP8266WiFi.h"
 
 MAX30100 * pulseOxymeter;
@@ -21,10 +20,6 @@ SoftwareSerial swSer(14, 12); // @suppress("Abstract class cannot be instantiate
 
 JQ6500_Serial mp3(&swSer);
 
-static char string_4dig[10];
-
-QueueArray <int> queue(10);
-
 #define CIRCULAR_BUFFER_SIZE 5
 
 int counts[CIRCULAR_BUFFER_SIZE];
@@ -32,7 +27,6 @@ int beatCount = 0;
 
 int lastTalk;
 
-void ozv(int myfile);
 
 void setup()
 {
@@ -43,7 +37,8 @@ void setup()
 	swSer.begin(9600);
 	Serial.println("Pulse oxymeter test!");
 
-	pulseOxymeter = new MAX30100();
+	pulseOxymeter = new MAX30100(DEFAULT_OPERATING_MODE, DEFAULT_SAMPLING_RATE,
+			DEFAULT_LED_PULSE_WIDTH, MAX30100_LED_CURRENT_37MA);
 
 	u8g2.begin();
 	u8g2.setFont(u8g2_font_logisoso32_tf); // set the target font to calculate the pixel width
@@ -51,9 +46,9 @@ void setup()
 
 	mp3.setVolume(10);
 
-		WiFi.disconnect();
-		WiFi.mode(WIFI_OFF);
-		WiFi.forceSleepBegin();
+	WiFi.disconnect();
+	WiFi.mode(WIFI_OFF);
+	WiFi.forceSleepBegin();
 }
 
 
@@ -74,20 +69,11 @@ void loop()
 		do
 		{
 			u8g2.setCursor(0, 32);
-			u8g2.print(result.heartBPM);
+			u8g2.print(result.heartBPM, 1);
 		} while ( u8g2.nextPage() );
 
 		beatCount = (++beatCount) % CIRCULAR_BUFFER_SIZE;
 		counts[beatCount] = round(result.heartBPM);
-
-		Serial.print(beatCount); Serial.print(" - ");
-
-		for (int i = 0; i < CIRCULAR_BUFFER_SIZE; i++)
-		{
-			Serial.print(counts[i]); Serial.print(" ");
-		}
-
-		Serial.println();
 
 		int minCount = 10000, maxCount = -10000;
 
@@ -99,19 +85,14 @@ void loop()
 
 		if (maxCount - minCount < 4)
 		{
-			if (queue.isEmpty())
+			if (!digitalRead(BusyState))
 			{
 				if (millis() - lastTalk > 5000)
 				{
-					voicedig(itoa(round(result.heartBPM), string_4dig, 10));
+					mp3.playFileByIndexNumber(round(result.heartBPM) - 41);
 					lastTalk = millis();
 				}
 			}
-		}
-
-		if (!digitalRead(BusyState) && queue.count() > 0)
-		{
-			mp3.playFileByIndexNumber(queue.pop());
 		}
 	}
 
@@ -132,56 +113,7 @@ void loop()
 //	}
 }
 
-void ozv(int myfile)
-{
-	queue.push(myfile);
-}
 
-bool fl;
-char ccc[3];
-byte troyka [3];
-
-#define c19 19
-#define c100 29
-#define c1000 38
-#define odna 41
-#define dve 42
-
-void voicedig(char cc[])
-{
-  int a,b,c,d,jj,sme,dp;
-  a=strlen(cc);
-  for (byte i=0;i<3;i++) ccc[i]=0;
-  b=a%3;c=a/3;jj=0;
-  for (byte i=0;i<c+1;i++)
-    {strncpy(ccc,cc+jj,b);
-     d=atoi(ccc); a=d;
-     for (byte i=0;i<3;i++)
-       { troyka[2-i]=a%10;
-         a=a/10;
-       }
-    if (d>0)
-     { dp=troyka[2];
-       if (c-i==1)
-        if (troyka[2]==1) dp=odna;
-          else if(troyka[2]==2) dp=dve;
-       if (troyka[0]>0) ozv(c100+troyka[0]-1);
-       if (troyka[1]>1) ozv(c19+troyka[1]);
-          else if (troyka[1]==1)
-                  {ozv(troyka[1]*10+troyka[2]+1);
-                   goto m1;
-                  }
-       if (troyka[2]>0) ozv(dp+1);
-       m1: a=d%100;
-        if (a>19) a=d%10;
-        if (a==1) sme=0; else
-        if (a>1 && a<5) sme=1; else sme=2;
-       if (c-i>0) ozv(c1000+(c-i-1)*3+sme);
-      }
-      jj=jj+b;b=3;
-      delay(100);
-    }
-}
 
 
 

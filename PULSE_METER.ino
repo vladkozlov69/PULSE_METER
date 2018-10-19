@@ -20,6 +20,8 @@ SoftwareSerial swSer(14, 12); // @suppress("Abstract class cannot be instantiate
 
 JQ6500_Serial mp3(&swSer);
 
+QueueArray<int> queue(10);
+
 #define CIRCULAR_BUFFER_SIZE 5
 
 int counts[CIRCULAR_BUFFER_SIZE];

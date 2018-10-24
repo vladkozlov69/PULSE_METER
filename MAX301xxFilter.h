@@ -76,9 +76,9 @@ struct meanDiffFilter_t
   byte count;
 };
 
-class MAX30105Filter {
+class MAX301xxFilter {
 public:
-	MAX30105Filter();
+	MAX301xxFilter();
     pulseoxymeter_t update(long redValue, long irValue);
     dcFilter_t dcRemoval(float x, float prev_w, float alpha);
     void lowPassButterworthFilter( float x, butterworthFilter_t * filterResult );

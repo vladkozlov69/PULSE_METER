@@ -24,23 +24,31 @@ QueueArray<int> queue(10);
 
 #define CIRCULAR_BUFFER_SIZE 5
 
+#define LOOP_DELAY_MS 12
+
 int counts[CIRCULAR_BUFFER_SIZE];
 int beatCount = 0;
 
 int lastTalk;
+int lastMeasurement;
 
 
 void setup()
 {
 	pinMode(BusyState,INPUT);
+	pinMode(2, OUTPUT);
+
+	digitalWrite(2, HIGH);
 
 	Wire.begin();
 	Serial.begin(9600);
 	swSer.begin(9600);
 	Serial.println("Pulse oxymeter test!");
 
-	pulseOxymeter = new MAX30100(DEFAULT_OPERATING_MODE, DEFAULT_SAMPLING_RATE,
-			DEFAULT_LED_PULSE_WIDTH, MAX30100_LED_CURRENT_37MA);
+	pulseOxymeter = new MAX30100();
+
+//	pulseOxymeter = new MAX30100(DEFAULT_OPERATING_MODE, DEFAULT_SAMPLING_RATE,
+//			DEFAULT_LED_PULSE_WIDTH, MAX30100_LED_CURRENT_37MA);
 
 	u8g2.begin();
 	u8g2.setFont(u8g2_font_logisoso32_tf); // set the target font to calculate the pixel width
@@ -51,6 +59,8 @@ void setup()
 	WiFi.disconnect();
 	WiFi.mode(WIFI_OFF);
 	WiFi.forceSleepBegin();
+
+	lastMeasurement = millis();
 }
 
 
@@ -91,22 +101,39 @@ void loop()
 			{
 				if (millis() - lastTalk > 5000)
 				{
-					mp3.playFileByIndexNumber(round(result.heartBPM) - 40);
+					if (queue.isEmpty())
+					{
+						// as we have files in JQ6500 starting with 0040
+						queue.push(round(result.heartBPM) - 40);
+					}
+
 					lastTalk = millis();
 				}
 			}
 		}
+
+		lastMeasurement = millis();
+	}
+
+	if (millis() - lastMeasurement > 15000)
+	{
+		digitalWrite(2, LOW);
+	}
+
+	if (queue.count() > 0 && !digitalRead(BusyState))
+	{
+		mp3.playFileByIndexNumber(queue.pop());
 	}
 
 	int t_End = millis();
 
-	if (t_End >= t_Start && (t_End - t_Start < 10))
+	if (t_End >= t_Start && (t_End - t_Start < LOOP_DELAY_MS))
 	{
-		delay(10 - (t_End - t_Start));
+		delay(LOOP_DELAY_MS - (t_End - t_Start));
 	}
 	else
 	{
-		delay(15);
+		delay(LOOP_DELAY_MS);
 	}
 }
 

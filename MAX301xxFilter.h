@@ -76,14 +76,21 @@ struct meanDiffFilter_t
   byte count;
 };
 
+typedef void (*setLEDCurrentsFunc)(uint8_t, uint8_t);
+
+#define MAGIC_ACCEPTABLE_INTENSITY_DIFF         65000
+#define RED_LED_CURRENT_ADJUSTMENT_MS           500
+
+//void setLEDCurrentsFunc ( void (*f)(float, float) );
+
 class MAX301xxFilter {
 public:
-	MAX301xxFilter();
+	MAX301xxFilter(uint8_t redLEDCurrent, uint8_t irLEDCurrent, setLEDCurrentsFunc balanceFunc);
     pulseoxymeter_t update(long redValue, long irValue);
     dcFilter_t dcRemoval(float x, float prev_w, float alpha);
     void lowPassButterworthFilter( float x, butterworthFilter_t * filterResult );
     float meanDiff(float M, meanDiffFilter_t* filterValues);
-
+    setLEDCurrentsFunc setLEDCurrents = NULL;
   private:
     bool detectPulse(float sensor_value);
     void balanceIntesities( float redLedDC, float IRLedDC );
@@ -91,11 +98,12 @@ public:
     void writeRegister(byte address, byte val);
     uint8_t readRegister(uint8_t address);
     void readFrom(byte address, int num, byte _buff[]);
-
+    void balanceIntensities( float redLedDC, float IRLedDC );
   private:
     bool debug;
 
     uint8_t redLEDCurrent;
+    uint8_t irLEDCurrent;
     float lastREDLedCurrentCheck;
 
     uint8_t currentPulseDetectorState;
@@ -118,7 +126,6 @@ public:
     uint16_t samplesRecorded;
     uint16_t pulsesDetected;
     float currentSaO2Value;
-
 };
 
 #endif /* MAX301XXFILTER_H_ */

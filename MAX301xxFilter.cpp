@@ -8,8 +8,12 @@
 
 #include "MAX301xxFilter.h"
 
-MAX301xxFilter::MAX301xxFilter()
+MAX301xxFilter::MAX301xxFilter(uint8_t redLEDCurrent, uint8_t irLEDCurrent, setLEDCurrentsFunc balanceFunc)
 {
+	this->redLEDCurrent = redLEDCurrent;
+	this->irLEDCurrent = irLEDCurrent;
+	this->setLEDCurrents = balanceFunc;
+
 	dcFilterIR.result = 0;
 
 	dcFilterRed.w = 0;
@@ -89,7 +93,7 @@ pulseoxymeter_t MAX301xxFilter::update(long redValue, long irValue)
 		}
 	}
 
-	//balanceIntesities( dcFilterRed.w, dcFilterIR.w );
+	balanceIntensities( dcFilterRed.w, dcFilterIR.w );
 
 	result.heartBPM = currentBPM;
 	result.irCardiogram = lpbFilterIR.result;
@@ -255,6 +259,32 @@ float MAX301xxFilter::meanDiff(float M, meanDiffFilter_t* filterValues)
 
 	avg = filterValues->sum / filterValues->count;
 	return avg - M;
+}
+
+void MAX301xxFilter::balanceIntensities( float redLedDC, float IRLedDC )
+{
+	if (setLEDCurrents == NULL) return;
+
+	if( millis() - lastREDLedCurrentCheck >= RED_LED_CURRENT_ADJUSTMENT_MS)
+	{
+		Serial.println( redLedDC - IRLedDC );
+		if( IRLedDC - redLedDC > MAGIC_ACCEPTABLE_INTENSITY_DIFF && redLEDCurrent < 0xFF)
+		{
+			redLEDCurrent++;
+			setLEDCurrents( redLEDCurrent, irLEDCurrent);
+			if(debug == true)
+			Serial.println("RED LED Current +");
+		}
+		else if(redLedDC - IRLedDC > MAGIC_ACCEPTABLE_INTENSITY_DIFF && redLEDCurrent > 0)
+		{
+			redLEDCurrent--;
+			setLEDCurrents( redLEDCurrent, irLEDCurrent);
+			if(debug == true)
+			Serial.println("RED LED Current -");
+		}
+
+		lastREDLedCurrentCheck = millis();
+	}
 }
 
 

@@ -54,7 +54,7 @@ void setup()
 	u8g2.setFont(u8g2_font_logisoso32_tf); // set the target font to calculate the pixel width
 	u8g2.setFontMode(0);    // enable transparent mode, which is faster
 
-	mp3.setVolume(10);
+	mp3.setVolume(15);
 
 	WiFi.disconnect();
 	WiFi.mode(WIFI_OFF);
@@ -104,18 +104,20 @@ void loop()
 					if (queue.isEmpty())
 					{
 						// as we have files in JQ6500 starting with 0040
-						queue.push(round(result.heartBPM) - 40);
+						queue.push(round(result.heartBPM) - 39);
 					}
 
 					lastTalk = millis();
 				}
 			}
+
+			lastMeasurement = millis();
 		}
 
-		lastMeasurement = millis();
+		//lastMeasurement = millis();
 	}
 
-	if (millis() - lastMeasurement > 15000)
+	if (millis() - lastMeasurement > 20 * 1000)
 	{
 		digitalWrite(2, LOW);
 	}
